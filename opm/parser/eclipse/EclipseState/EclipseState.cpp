@@ -136,6 +136,7 @@ namespace Opm {
         initIOConfigPostSchedule(deck);
         initTitle(deck);
         initProperties(deck);
+        initInitConfig(deck);
         initSimulationConfig(deck);
         initTransMult();
         initFaults(deck);
@@ -263,6 +264,10 @@ namespace Opm {
         return m_ioConfig;
     }
 
+    InitConfigConstPtr EclipseState::getInitConfig() const {
+        return m_initConfig;
+    }
+
     SimulationConfigConstPtr EclipseState::getSimulationConfig() const {
         return m_simulationConfig;
     }
@@ -368,7 +373,6 @@ namespace Opm {
         }
     }
 
-
     void EclipseState::initIOConfigPostSchedule(DeckConstPtr deck) {
         if (Section::hasSOLUTION(deck)) {
             std::shared_ptr<const SOLUTIONSection> solutionSection = std::make_shared<const SOLUTIONSection>(deck);
@@ -376,6 +380,9 @@ namespace Opm {
         }
     }
 
+    void EclipseState::initInitConfig(DeckConstPtr deck){
+        m_initConfig = std::make_shared<const InitConfig>(deck);
+    }
 
     void EclipseState::initSimulationConfig(DeckConstPtr deck) {
         m_simulationConfig = std::make_shared<const SimulationConfig>(deck , m_intGridProperties);
@@ -459,6 +466,7 @@ namespace Opm {
         for (size_t index=0; index < section->count("MULTFLT"); index++) {
             DeckKeywordConstPtr faultsKeyword = section->getKeyword("MULTFLT" , index);
             for (auto iter = faultsKeyword->begin(); iter != faultsKeyword->end(); ++iter) {
+
                 DeckRecordConstPtr faultRecord = *iter;
                 const std::string& faultName = faultRecord->getItem(0)->getString(0);
                 double multFlt = faultRecord->getItem(1)->getRawDouble(0);
