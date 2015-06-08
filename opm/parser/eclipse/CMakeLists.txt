@@ -10,6 +10,7 @@ add_subdirectory(EclipseState/Tables/tests)
 add_subdirectory(EclipseState/Grid/tests)
 add_subdirectory(EclipseState/Util/tests)
 add_subdirectory(EclipseState/IOConfig/tests)
+add_subdirectory(EclipseState/InitConfig/tests)
 
 add_subdirectory( Applications )
 
